@@ -131,7 +131,6 @@ with st.form("prediction_form"):
          "Renault", "Volkswagen", "Skoda", "Nissan", "MG", "Jeep", "Mercedes",
          "BMW", "Audi", "Jaguar", "Volvo"]
     )
-    year = st.number_input("Manufacturing Year", min_value=1990, max_value=2025, step=1)
     
     col3, col4 = st.columns(2)
     with col3:
@@ -167,7 +166,6 @@ if submit_btn:
     else:
         data = {
             "company": company,
-            "year": year,
             "owner": owner,
             "fuel": fuel,
             "seller_type": seller_type,
