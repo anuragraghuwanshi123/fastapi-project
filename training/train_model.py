@@ -20,7 +20,7 @@ df = (
     .drop(columns=['name', 'model', 'edition'])
 )
 
-X = df.drop(columns='selling_price')
+X = df.drop(columns=['selling_price', 'year'])
 y = df.selling_price.copy()
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
