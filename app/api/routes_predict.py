@@ -8,6 +8,7 @@ router = APIRouter()
 
 class CarFeatures(BaseModel):
     company: str
+    year: Optional[int] = None
     owner: str
     fuel: str
     seller_type: str
