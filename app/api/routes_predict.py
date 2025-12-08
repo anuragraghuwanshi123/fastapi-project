@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
+from typing import Optional
 from app.core.dependencies import get_api_key, get_current_user
 from app.services.model_service import predict_car_price
 
