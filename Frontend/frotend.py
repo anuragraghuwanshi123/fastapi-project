@@ -3,24 +3,53 @@ import requests
 import time
 
 # ---------------------- PAGE CONFIG ----------------------
-st.set_page_config(
-    page_title="Car Price Predictor",
-    page_icon="🚗",
-    layout="centered"
-)
-
 # ---------------------- CUSTOM CSS ----------------------
 st.markdown("""
     <style>
         .stApp {
             background: linear-gradient(135deg,#000000,#1c1c1c,#2c2c2c);
         }
+
         h1, h2, h3 {
             color: #ffffff !important;
         }
+
         label, .stMarkdown {
             color: #E5E5E5 !important;
         }
+
+        /* ---------------- EXPANDER STYLING ---------------- */
+        /* Background of the whole expander content */
+        div.streamlit-expanderContent {
+            background-color: #ffffff !important;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        /* Styling text inside expander */
+        div.streamlit-expanderContent label,
+        div.streamlit-expanderContent p,
+        div.streamlit-expanderContent h3,
+        div.streamlit-expanderContent input,
+        div.streamlit-expanderContent span,
+        div.streamlit-expanderContent div {
+            color: #000000 !important;
+        }
+
+        /* Header area of expander button */
+        summary {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            font-weight: 700;
+            border-radius: 6px;
+            padding: 10px;
+        }
+
+        summary:hover {
+            background-color: #f2f2f2 !important;
+        }
+
+        /* Make the Generate button look consistent */
         div.stButton > button {
             background: linear-gradient(to right, #FF512F, #DD2476);
             color: white;
@@ -33,6 +62,7 @@ st.markdown("""
             transform: scale(1.05);
             background: linear-gradient(to right, #DD2476, #FF512F);
         }
+
         .result-box {
             background-color: #222;
             border-radius: 10px;
@@ -47,8 +77,9 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+
 # ---------------------- HEADER ----------------------
-st.markdown("<h1 style='text-align:center;'>🚗 Car Price Prediction</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align:center;'> Car Price Prediction</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='text-align:center; color:#d1d1d1;'>Enter required details below and get the estimated resale value.</h4><br>", unsafe_allow_html=True)
 
 # ---------------------- API URL ----------------------
@@ -56,15 +87,19 @@ API_URL = "https://fastapi-project-731c.onrender.com/predict"
 LOGIN_URL = "https://fastapi-project-731c.onrender.com/login"
 
 # ---------------------- AUTH SECTION ----------------------
-with st.expander("🔐 API Authentication (Required)"):
+with st.expander("🔐 API Authentication (Required)", expanded=False):
+    st.markdown("<p class='auth-title'>Authentication Required To Access Prediction API</p>", unsafe_allow_html=True)
+    
     col1, col2 = st.columns(2)
 
     with col1:
         api_key = st.text_input("API Key", value=st.session_state.get("apikey", ""), type="password")
+
     with col2:
         st.subheader("Get Token Automatically")
-        username = st.text_input("Username", value="", key="username")
-        password = st.text_input("Password", value="", key="password", type="password")
+        username = st.text_input("Username", key="username")
+        password = st.text_input("Password", key="password", type="password")
+
         if st.button("Generate Token"):
             if not username or not password:
                 st.error("Enter username & password!")
@@ -78,9 +113,9 @@ with st.expander("🔐 API Authentication (Required)"):
                             st.session_state["token"] = token
                             st.session_state["token_expiry"] = time.time() + 1800  # 30 minutes
                             st.session_state["apikey"] = api_key
-                            st.success("✔ Token generated successfully! (Valid 30 mins)")
+                            st.success(" Token generated successfully! (Valid 30 mins)")
                         else:
-                            st.error("❌ Invalid credentials")
+                            st.error(" Invalid credentials")
                     else:
                         st.error(f"Failed to generate token: {resp.text}")
                 except Exception as e:
@@ -88,13 +123,13 @@ with st.expander("🔐 API Authentication (Required)"):
 
 # ---------------------- USER INPUT FORM ----------------------
 with st.form("prediction_form"):
-    st.subheader("📌 Car Details")
+    st.subheader(" Car Details")
 
     company = st.selectbox(
         "Car Brand (Company)", 
-        ["Maruti", "Hyundai", "Honda", "Toyota", "Tata", "Mahindra", 
-         "Ford", "Kia", "Renault", "Volkswagen", "Skoda", "Nissan", 
-         "MG", "Jeep", "Mercedes", "BMW", "Audi", "Jaguar", "Volvo"]
+        ["Maruti", "Hyundai", "Honda", "Toyota", "Tata", "Mahindra", "Ford", "Kia",
+         "Renault", "Volkswagen", "Skoda", "Nissan", "MG", "Jeep", "Mercedes",
+         "BMW", "Audi", "Jaguar", "Volvo"]
     )
     year = st.number_input("Manufacturing Year", min_value=1990, max_value=2025, step=1)
     
@@ -111,17 +146,19 @@ with st.form("prediction_form"):
     engine_cc = st.number_input("Engine CC", min_value=500.0)
     max_power_bhp = st.number_input("Max Power (BHP)", min_value=20.0)
     torque_nm = st.number_input("Torque (Nm)", min_value=50.0)
-    seats = st.number_input("Seats", min_value=2.0, max_value=10.0)
 
-    submit_btn = st.form_submit_button("🚀 Predict Price")
+    # -------- Updated: Seats Dropdown --------
+    seats = st.selectbox("Seats", [2, 4, 5, 6, 7, 8, 9, 10])
+
+    submit_btn = st.form_submit_button(" Predict Price")
 
 # ---------------------- TOKEN WARNING ----------------------
 if "token_expiry" in st.session_state:
     remaining = int(st.session_state["token_expiry"] - time.time())
     if remaining <= 0:
-        st.warning("⚠ Token expired! Please generate a new one.")
+        st.warning(" Token expired! Please generate a new one.")
     elif remaining < 300:
-        st.warning(f"⚠ Token will expire in {remaining} seconds. Consider regenerating it.")
+        st.warning(f" Token will expire in {remaining} seconds. Consider regenerating it.")
 
 # ---------------------- API CALL ----------------------
 if submit_btn:
@@ -153,9 +190,9 @@ if submit_btn:
             result = response.json()
 
             if "predicted_price" in result:
-                st.markdown(f"<div class='result-box'>💰 Estimated Price: <br>{result['predicted_price']} INR</div>", unsafe_allow_html=True)
+                st.markdown(f"<div class='result-box'> Estimated Price: <br>{result['predicted_price']} INR</div>", unsafe_allow_html=True)
             else:
-                st.error(f"❌ Error: {result}")
+                st.error(f" Error: {result}")
 
         except Exception as e:
-            st.error(f"⚠ Request Failed: {e}")
+            st.error(f" Request Failed: {e}")
