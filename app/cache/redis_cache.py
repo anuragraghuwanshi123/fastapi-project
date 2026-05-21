@@ -1,18 +1,18 @@
 import os
 import redis
-from dotenv import load_dotenv
 
-load_dotenv()
+
+redis_client = None
 
 REDIS_URL = os.getenv("REDIS_URL")
 
-redis_client = redis.StrictRedis.from_url(REDIS_URL, decode_responses=True)
-
-
-def get_cached_prediction(key: str):
-    value = redis_client.get(key)
-    return eval(value) if value else None
-
-
-def set_cached_prediction(key: str, value: dict):
-    redis_client.set(key, str(value))
+if REDIS_URL:
+    try:
+        redis_client = redis.from_url(REDIS_URL, decode_responses=True)
+        redis_client.ping()
+        print("Redis connected")
+    except Exception as e:
+        print("Redis not connected:", e)
+        redis_client = None
+else:
+    print("Redis disabled: REDIS_URL not found")
