@@ -11,7 +11,7 @@ A real-time car resale price prediction system built using **XGBoost, FastAPI, R
 ### 🚀 **Live Application**
 
 🎨 **Streamlit Frontend:**
-👉 [https://car-price-ai-94xg7mpcnswbdzqftl29.streamlit.app](https://car-price-ai-94xg7mpcnswbdzqftl29.streamlit.app)
+👉 [https://autovaluator-car-price-prediction-app-nzprhrfxdawvgy8mhf32sz.streamlit.app/](https://autovaluator-car-price-prediction-app-nzprhrfxdawvgy8mhf32sz.streamlit.app/)
 
 ⚙️ **FastAPI Backend:**
 👉 [https://fastapi-project-731c.onrender.com/docs](https://fastapi-project-731c.onrender.com/docs)
