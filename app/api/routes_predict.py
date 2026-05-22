@@ -19,8 +19,16 @@ class CarFeatures(BaseModel):
     torque_nm: float
     seats: float
 
-
-@router.post('/predict')
+#prediction depends on authentication and api 
+"""@router.post('/predict')
 def predict_price(car: CarFeatures, user=Depends(get_current_user), _=Depends(get_api_key)):
     prediction = predict_car_price(car.model_dump())
-    return {'predicted_price': f'{prediction:,.2f}'}
+    return {'predicted_price': f'{prediction:,.2f}'}"""
+
+@router.post("/predict")
+def predict_price(car: CarFeatures):
+    prediction = predict_car_price(car.model_dump())
+
+    return {
+        "predicted_price": f"{prediction:,.2f}"
+    }
