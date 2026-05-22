@@ -12,14 +12,30 @@ model = joblib.load(settings.MODEL_PATH)
 def predict_car_price(data: dict):
     cache_key = str(data)
 
-    cached = get_cached_prediction(cache_key)
+    # ---------------- Try Redis Cache ----------------
+    try:
+        cached = get_cached_prediction(cache_key)
 
-    if cached:
-        return float(cached)
+        if cached:
+            print("Using cached prediction")
+            return float(cached)
 
+    except Exception as e:
+        print(f"Redis unavailable: {e}")
+
+
+    # ---------------- Model Prediction ----------------
     input_data = pd.DataFrame([data])
+
     prediction = model.predict(input_data)[0]
 
-    set_cached_prediction(cache_key, prediction)
 
-    return prediction
+    # ---------------- Try Save to Redis ----------------
+    try:
+        set_cached_prediction(cache_key, prediction)
+
+    except Exception as e:
+        print(f"Could not cache prediction: {e}")
+
+
+    return float(prediction)
